@@ -5,7 +5,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -24,8 +23,9 @@ public class Aircraft {
     @JsonProperty("number_of_engines")
     private int numberOfEngines;
 
+    @ManyToOne
     @JsonProperty("operator_airline")
-    private long airlineId;  // Relationship with the Airline entity
+    private Airline airline; // Mapping to the Airline entity
 
     // Getters and Setters
     public Long getId() {
@@ -68,11 +68,11 @@ public class Aircraft {
         this.numberOfEngines = numberOfEngines;
     }
 
-    public long getAirlineId() {
-        return airlineId;
+    public Airline getAirline() {
+        return airline;
     }
 
-    public void setAirlineId(long airlineId) {
-        this.airlineId = airlineId;
+    public void setAirline(Airline airline) {
+        this.airline = airline;
     }
 }
