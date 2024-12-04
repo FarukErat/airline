@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -37,7 +38,7 @@ public class AirlineController {
     }
 
     @PatchMapping("/{id}/")
-    public ResponseEntity<Airline> updateAirline(@PathVariable Long id, @RequestBody Map<String, Integer> fields) {
+    public ResponseEntity<Airline> updateAirline(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         Optional<Airline> existingAirlineOpt = airlineService.getAirlineById(id);
         if (!existingAirlineOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -46,9 +47,14 @@ public class AirlineController {
         Airline existingAirline = existingAirlineOpt.get();
 
         if (fields.containsKey("founded_year")) {
-            Integer foundedYear = fields.get("founded_year");
+            Integer foundedYear = (Integer) fields.get("founded_year");
             if (foundedYear != null && foundedYear > 0) {
                 existingAirline.setFoundedYear(foundedYear);
+            }
+        } else if (fields.containsKey("callsign")) {
+            String callsign = (String) fields.get("callsign");
+            if (callsign != null && !callsign.trim().isEmpty()) {
+                existingAirline.setCallsign(callsign);
             }
         }
 
