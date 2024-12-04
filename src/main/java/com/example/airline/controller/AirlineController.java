@@ -1,5 +1,6 @@
 package com.example.airline.controller;
 
+import com.example.airline.model.Airline;
 import com.example.airline.service.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,37 +11,37 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/airlines")
+@RequestMapping("/airline")
 public class AirlineController {
 
     @Autowired
     private AirlineService airlineService;
 
-    @GetMapping
-    public List<com.example.airline.model.Airline> getAllAirlines() {
+    @GetMapping("/")
+    public List<Airline> getAllAirlines() {
         return airlineService.getAllAirlines();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<com.example.airline.model.Airline> getAirlineById(@PathVariable Long id) {
-        Optional<com.example.airline.model.Airline> airline = airlineService.getAirlineById(id);
+    public ResponseEntity<Airline> getAirlineById(@PathVariable Long id) {
+        Optional<Airline> airline = airlineService.getAirlineById(id);
         return airline.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PostMapping
-    public ResponseEntity<com.example.airline.model.Airline> createAirline(@RequestBody com.example.airline.model.Airline airline) {
-        com.example.airline.model.Airline savedAirline = airlineService.saveAirline(airline);
+    @PostMapping("/")
+    public ResponseEntity<Airline> createAirline(@RequestBody Airline airline) {
+        Airline savedAirline = airlineService.saveAirline(airline);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAirline);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<com.example.airline.model.Airline> updateAirline(@PathVariable Long id, @RequestBody com.example.airline.model.Airline airline) {
+    public ResponseEntity<Airline> updateAirline(@PathVariable Long id, @RequestBody Airline airline) {
         if (!airlineService.getAirlineById(id).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         airline.setId(id);
-        com.example.airline.model.Airline updatedAirline = airlineService.saveAirline(airline);
+        Airline updatedAirline = airlineService.saveAirline(airline);
         return ResponseEntity.ok(updatedAirline);
     }
 
