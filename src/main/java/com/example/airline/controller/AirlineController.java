@@ -22,7 +22,7 @@ public class AirlineController {
         return airlineService.getAllAirlines();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/")
     public ResponseEntity<Airline> getAirlineById(@PathVariable Long id) {
         Optional<Airline> airline = airlineService.getAirlineById(id);
         return airline.map(ResponseEntity::ok)
