@@ -22,6 +22,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Skip filtering for /api-token-auth/ endpoint
+        String requestURI = request.getRequestURI();
+        if (requestURI.contains("/api-token-auth/")) {
+            filterChain.doFilter(request, response); // Skip JWT validation and continue
+            return;
+        }
+
         // Extract the Bearer token from the Authorization header
         String authorizationHeader = request.getHeader("Authorization");
 
