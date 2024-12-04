@@ -5,6 +5,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 @Entity
 public class Airline {
 
@@ -14,7 +17,11 @@ public class Airline {
 
     private String name;
     private String callsign;
+
+    @JsonProperty("founded_year")
     private int foundedYear;
+
+    @JsonProperty("base_airport")
     private String baseAirport;
 
     // Getters and Setters
