@@ -2,6 +2,7 @@ package com.example.airline.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,22 +16,20 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api-token-auth")
 public class AuthController {
-
-    private static final String SECRET_KEY = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     @PostMapping("/")
     public ResponseEntity<String> createApiToken(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
 
-        // Validate username and password
         if ("testuser".equals(username) && "testpass".equals(password)) {
-            // Generate JWT token
             String token = Jwts.builder()
                     .setSubject(username)
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 600000)) // 10 minutes
-                    .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
 
             return ResponseEntity.ok(token);
