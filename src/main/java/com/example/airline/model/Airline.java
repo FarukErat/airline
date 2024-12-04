@@ -24,7 +24,6 @@ public class Airline {
     @JsonProperty("base_airport")
     private String baseAirport;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

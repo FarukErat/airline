@@ -29,7 +29,6 @@ public class Aircraft {
     @JsonProperty("operator_airline")
     private String operatorAirlineId;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

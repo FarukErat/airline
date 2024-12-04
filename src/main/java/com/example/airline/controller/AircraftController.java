@@ -25,7 +25,6 @@ public class AircraftController {
 
     @PostMapping("/")
     public ResponseEntity<?> createAircraft(@RequestBody Aircraft aircraft) {
-        // Handle operator_airline
         if (aircraft.getOperatorAirlineId() != null && !aircraft.getOperatorAirlineId().isEmpty()) {
             try {
                 Long airlineId = Long.parseLong(aircraft.getOperatorAirlineId());
@@ -43,7 +42,6 @@ public class AircraftController {
             aircraft.setAirline(null);
         }
 
-        // Save the aircraft
         Aircraft savedAircraft = aircraftService.saveAircraft(aircraft);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAircraft);
     }
