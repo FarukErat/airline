@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -16,6 +17,12 @@ public class AirlineController {
 
     @Autowired
     private AirlineService airlineService;
+
+    @PostMapping("/")
+    public ResponseEntity<Airline> createAirline(@RequestBody Airline airline) {
+        Airline savedAirline = airlineService.saveAirline(airline);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedAirline);
+    }
 
     @GetMapping("/")
     public List<Airline> getAllAirlines() {
@@ -29,23 +36,28 @@ public class AirlineController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Airline> createAirline(@RequestBody Airline airline) {
-        Airline savedAirline = airlineService.saveAirline(airline);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAirline);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Airline> updateAirline(@PathVariable Long id, @RequestBody Airline airline) {
-        if (!airlineService.getAirlineById(id).isPresent()) {
+    @PatchMapping("/{id}/")
+    public ResponseEntity<Airline> updateAirline(@PathVariable Long id, @RequestBody Map<String, Integer> fields) {
+        Optional<Airline> existingAirlineOpt = airlineService.getAirlineById(id);
+        if (!existingAirlineOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        airline.setId(id);
-        Airline updatedAirline = airlineService.saveAirline(airline);
+
+        Airline existingAirline = existingAirlineOpt.get();
+
+        if (fields.containsKey("founded_year")) {
+            Integer foundedYear = fields.get("founded_year");
+            if (foundedYear != null && foundedYear > 0) {
+                existingAirline.setFoundedYear(foundedYear);
+            }
+        }
+
+        Airline updatedAirline = airlineService.saveAirline(existingAirline);
         return ResponseEntity.ok(updatedAirline);
     }
 
-    @DeleteMapping("/{id}")
+
+    @DeleteMapping("/{id}/")
     public ResponseEntity<Void> deleteAirline(@PathVariable Long id) {
         if (!airlineService.getAirlineById(id).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
