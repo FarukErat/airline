@@ -1,7 +1,9 @@
 package com.example.airline.controller;
 
 import com.example.airline.model.Aircraft;
+import com.example.airline.model.Airline;
 import com.example.airline.service.AircraftService;
+import com.example.airline.service.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,30 @@ public class AircraftController {
     @Autowired
     private AircraftService aircraftService;
 
+    @Autowired
+    private AirlineService airlineService;
+
     @PostMapping("/")
-    public ResponseEntity<Aircraft> createAircraft(@RequestBody Aircraft aircraft) {
+    public ResponseEntity<?> createAircraft(@RequestBody Aircraft aircraft) {
+        // Handle operator_airline
+        if (aircraft.getOperatorAirlineId() != null && !aircraft.getOperatorAirlineId().isEmpty()) {
+            try {
+                Long airlineId = Long.parseLong(aircraft.getOperatorAirlineId());
+                Optional<Airline> airline = airlineService.getAirlineById(airlineId);
+                if (airline.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("Invalid operator_airline: Airline with ID " + airlineId + " does not exist.");
+                }
+                aircraft.setAirline(airline.get());
+            } catch (NumberFormatException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Invalid operator_airline: Must be a numeric ID.");
+            }
+        } else {
+            aircraft.setAirline(null);
+        }
+
+        // Save the aircraft
         Aircraft savedAircraft = aircraftService.saveAircraft(aircraft);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAircraft);
     }
@@ -35,7 +59,7 @@ public class AircraftController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}/")
     public ResponseEntity<Aircraft> updateAircraft(@PathVariable Long id, @RequestBody Aircraft aircraft) {
         if (!aircraftService.getAircraftById(id).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -45,7 +69,7 @@ public class AircraftController {
         return ResponseEntity.ok(updatedAircraft);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/")
     public ResponseEntity<Void> deleteAircraft(@PathVariable Long id) {
         if (!aircraftService.getAircraftById(id).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -1,10 +1,7 @@
 package com.example.airline.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -24,8 +21,13 @@ public class Aircraft {
     private int numberOfEngines;
 
     @ManyToOne
+    @JoinColumn(name = "airline_id")
+    @JsonIgnore // To prevent recursion when returning the Aircraft
+    private Airline airline; // Relationship with the Airline entity
+
+    @Transient // Temporary field for incoming string ID
     @JsonProperty("operator_airline")
-    private Airline airline; // Mapping to the Airline entity
+    private String operatorAirlineId;
 
     // Getters and Setters
     public Long getId() {
@@ -74,5 +76,13 @@ public class Aircraft {
 
     public void setAirline(Airline airline) {
         this.airline = airline;
+    }
+
+    public String getOperatorAirlineId() {
+        return operatorAirlineId;
+    }
+
+    public void setOperatorAirlineId(String operatorAirlineId) {
+        this.operatorAirlineId = operatorAirlineId;
     }
 }
