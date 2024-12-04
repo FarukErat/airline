@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -52,22 +53,41 @@ public class AircraftController {
         return aircraftService.getAllAircraft();
     }
 
-    @GetMapping("/{id}/")
+    @GetMapping("/{id}")
     public ResponseEntity<Aircraft> getAircraftById(@PathVariable Long id) {
         Optional<Aircraft> aircraft = aircraftService.getAircraftById(id);
         return aircraft.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PutMapping("/{id}/")
-    public ResponseEntity<Aircraft> updateAircraft(@PathVariable Long id, @RequestBody Aircraft aircraft) {
-        if (!aircraftService.getAircraftById(id).isPresent()) {
+    @PatchMapping("/{id}/")
+    public ResponseEntity<?> updateAircraft(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> fields) {
+
+        Optional<Aircraft> existingAircraftOpt = aircraftService.getAircraftById(id);
+        if (existingAircraftOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        aircraft.setId(id);
-        Aircraft updatedAircraft = aircraftService.saveAircraft(aircraft);
+
+        Aircraft existingAircraft = existingAircraftOpt.get();
+
+        if (fields.containsKey("manufacturer_serial_number")) {
+            Object serialNumberObj = fields.get("manufacturer_serial_number");
+            if (serialNumberObj instanceof String) {
+                existingAircraft.setManufacturerSerialNumber((String) serialNumberObj);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid type for manufacturer_serial_number. It must be a string.");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("manufacturer_serial_number field is required for this operation.");
+        }
+
+        Aircraft updatedAircraft = aircraftService.saveAircraft(existingAircraft);
+
         return ResponseEntity.ok(updatedAircraft);
     }
+
 
     @DeleteMapping("/{id}/")
     public ResponseEntity<Void> deleteAircraft(@PathVariable Long id) {
