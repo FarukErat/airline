@@ -1,20 +1,6 @@
 version: '3.8'
 
 services:
-  airline-db:
-    image: postgres:15
-    container_name: airline-db
-    environment:
-      POSTGRES_USER: myusername
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: airline
-    ports:
-      - "15432:5432"
-    networks:
-      - airline-network
-    volumes:
-      - airline-db-data:/var/lib/postgresql/data
-
   airline-app:
     build: .
     container_name: airline-app
@@ -27,13 +13,19 @@ services:
       JWT_SECRET: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     ports:
       - "8000:8000"
-    networks:
-      - airline-network
     restart: unless-stopped
 
-networks:
-  airline-network:
-    driver: bridge
+  airline-db:
+    image: postgres:15
+    container_name: airline-db
+    environment:
+      POSTGRES_USER: myusername
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: airline
+    ports:
+      - "15432:5432"
+    volumes:
+      - airline-db-data:/var/lib/postgresql/data
 
 volumes:
   airline-db-data:
