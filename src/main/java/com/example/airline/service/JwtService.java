@@ -1,8 +1,9 @@
 package com.example.airline.service;
 
+import com.example.airline.model.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,26 @@ import java.util.Date;
 public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
+    final private long accessTokenExpiry = 600000; // 10 minutes
+    final private long refreshTokenExpiry = 604800000; // 1 week
+
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(userDetails, accessTokenExpiry);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(userDetails, refreshTokenExpiry);
+    }
+
+    private String generateToken(UserDetails userDetails, long expiry) {
+        String token = Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiry))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+        return token;
+    }
 
     public boolean validateToken(String token) {
         try {
@@ -22,8 +43,6 @@ public class JwtService {
                     .getBody();
 
             return !isTokenExpired(claims);
-        } catch (SignatureException e) {
-            return false;
         } catch (Exception e) {
             return false;
         }
