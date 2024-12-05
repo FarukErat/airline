@@ -27,7 +27,7 @@ public class Aircraft {
 
     @Transient // Temporary field for incoming string ID
     @JsonProperty("operator_airline")
-    private String operatorAirlineId;
+    private Airline airline;
 
     public Long getId() {
         return id;

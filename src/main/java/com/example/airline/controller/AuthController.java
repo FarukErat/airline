@@ -30,7 +30,7 @@ public class AuthController {
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 600000)) // 10 minutes
                     .signWith(SignatureAlgorithm.HS256, secretKey)
-                    .compact();
+                    .compact(); // ver bad baby
 
             return ResponseEntity.ok(token);
         }

@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Skip filtering for /api-token-auth/ endpoint
         String requestURI = request.getRequestURI();
         if (requestURI.contains("/api-token-auth/")) {
+            // in .Net core we use decorators as auth with roles inside them  cannot we do şit the same here ?
             filterChain.doFilter(request, response); // Skip JWT validation and continue
             return;
         }

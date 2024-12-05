@@ -33,13 +33,13 @@ public class AirlineController {
     public ResponseEntity<Airline> getAirlineById(@PathVariable Long id) {
         Optional<Airline> airline = airlineService.getAirlineById(id);
         return airline.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{id}/")
+    @PatchMapping("/{id}/") // for testing how to get the data as form data
     public ResponseEntity<Airline> updateAirline(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         Optional<Airline> existingAirlineOpt = airlineService.getAirlineById(id);
-        if (!existingAirlineOpt.isPresent()) {
+        if (existingAirlineOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 

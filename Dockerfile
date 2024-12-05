@@ -1,4 +1,5 @@
 # Use the official OpenJDK image from the Docker Hub
+# how to integrate the IDE with docker for debugging
 FROM openjdk:23-jdk-slim as builder
 
 # Install Maven
