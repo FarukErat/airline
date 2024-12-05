@@ -1,5 +1,6 @@
 package com.example.airline.service;
 
+import com.example.airline.enums.TokenType;
 import com.example.airline.model.UserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,24 +18,33 @@ public class JwtService {
     final private long refreshTokenExpiry = 604800000; // 1 week
 
     public String generateAccessToken(UserDetails userDetails) {
-        return generateToken(userDetails, accessTokenExpiry);
+        return generateToken(userDetails, accessTokenExpiry, TokenType.access);
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        return generateToken(userDetails, refreshTokenExpiry);
+        return generateToken(userDetails, refreshTokenExpiry, TokenType.refresh);
     }
 
-    private String generateToken(UserDetails userDetails, long expiry) {
+    private String generateToken(UserDetails userDetails, long expiry, TokenType tokenType) {
         String token = Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiry))
+                .claim("tokenType", tokenType.toString())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
         return token;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateAccessToken(String accessToken) {
+        return validateToken(accessToken, TokenType.access);
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        return validateToken(refreshToken, TokenType.refresh);
+    }
+
+    private boolean validateToken(String token, TokenType tokenType) {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey)
@@ -42,7 +52,9 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
 
-            return !isTokenExpired(claims);
+            TokenType tokenTypeFromClaims = TokenType.valueOf(claims.get("tokenType", String.class));
+
+            return !isTokenExpired(claims) && tokenTypeFromClaims.equals(tokenType);
         } catch (Exception e) {
             return false;
         }

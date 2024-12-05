@@ -33,7 +33,7 @@ public class JwtAuthenticationAspect {
         }
 
         String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
-        if (!jwtService.validateToken(token)) {
+        if (!jwtService.validateAccessToken(token)) {
             throw new AuthenticationException("Invalid or expired JWT token");
         }
     }
