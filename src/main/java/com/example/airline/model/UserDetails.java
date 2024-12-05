@@ -14,6 +14,7 @@ public class UserDetails {
 
     private String username;
     private String hashedPassword;
+    private int roles;
 
     public Long getId() {
         return id;
@@ -37,5 +38,13 @@ public class UserDetails {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public int getRoles() {
+        return roles;
+    }
+
+    public void setRoles(int roles) {
+        this.roles = roles;
     }
 }

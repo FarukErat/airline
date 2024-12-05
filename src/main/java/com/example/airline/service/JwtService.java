@@ -1,5 +1,6 @@
 package com.example.airline.service;
 
+import com.example.airline.enums.Role;
 import com.example.airline.enums.TokenType;
 import com.example.airline.model.UserDetails;
 import io.jsonwebtoken.Claims;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -31,6 +34,7 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiry))
                 .claim("tokenType", tokenType.toString())
+                .claim("roles", Role.getRoles(userDetails.getRoles()).stream().map(Role::name).collect(Collectors.toList()))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
         return token;
@@ -79,4 +83,20 @@ public class JwtService {
         }
     }
 
+    public List<Role> extractRoles(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            List<String> rolesAsStrings = claims.get("roles", List.class);
+            return rolesAsStrings.stream()
+                    .map(Role::valueOf)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

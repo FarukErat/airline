@@ -2,6 +2,7 @@ package com.example.airline.controller;
 
 import com.example.airline.dto.LoginRequest;
 import com.example.airline.dto.RegisterRequest;
+import com.example.airline.enums.Role;
 import com.example.airline.model.UserDetails;
 import com.example.airline.service.JwtService;
 import com.example.airline.service.UserService;
@@ -44,6 +45,8 @@ public class AuthenticationController {
         UserDetails newUser = new UserDetails();
         newUser.setUsername(registerRequest.username);
         newUser.setHashedPassword(hashedPassword);
+        int roles = 1 << Role.USER.getValue();
+        newUser.setRoles(roles);
 
         UserDetails savedUser = userService.saveUser(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
