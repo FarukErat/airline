@@ -1,6 +1,7 @@
 package com.example.airline.controller;
 
 import com.example.airline.model.Airline;
+import com.example.airline.security.JwtAuthenticated;
 import com.example.airline.service.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@JwtAuthenticated
 @RestController
 @RequestMapping("/airline")
 public class AirlineController {

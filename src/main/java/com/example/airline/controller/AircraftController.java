@@ -2,6 +2,7 @@ package com.example.airline.controller;
 
 import com.example.airline.model.Aircraft;
 import com.example.airline.model.Airline;
+import com.example.airline.security.JwtAuthenticated;
 import com.example.airline.service.AircraftService;
 import com.example.airline.service.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@JwtAuthenticated
 @RestController
 @RequestMapping("/aircraft")
 public class AircraftController {
