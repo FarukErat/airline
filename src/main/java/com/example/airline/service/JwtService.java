@@ -64,4 +64,19 @@ public class JwtService {
         Date expirationDate = claims.getExpiration();
         return expirationDate.before(new Date());
     }
+
+    public String extractUsername(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

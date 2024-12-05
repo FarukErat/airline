@@ -73,4 +73,25 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
+
+    @PostMapping("/renew-access-token")
+    public ResponseEntity<?> renewAccessToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refresh_token");
+        String username = jwtService.extractUsername(refreshToken);
+
+        boolean isRefreshTokenValid = jwtService.validateRefreshToken(refreshToken);
+        if (!isRefreshTokenValid) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
+
+        Optional<UserDetails> existingUser = userService.getUserByUsername(username);
+        if (existingUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        UserDetails user = existingUser.get();
+        String accessToken = jwtService.generateAccessToken(user);
+
+        return ResponseEntity.ok(accessToken);
+    }
 }
