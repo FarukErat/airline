@@ -1,5 +1,5 @@
 package com.example.airline.controller;
-
+import com.example.airline.security.JwtAuthenticated;
 import com.example.airline.dto.LoginRequest;
 import com.example.airline.dto.RegisterRequest;
 import com.example.airline.enums.Role;
@@ -10,10 +10,7 @@ import com.example.airline.service.PasswordHasher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,5 +93,23 @@ public class AuthenticationController {
         String accessToken = jwtService.generateAccessToken(user);
 
         return ResponseEntity.ok(accessToken);
+    }
+
+    @GetMapping("/admin")
+    @JwtAuthenticated(roles = {Role.ADMIN})
+    public String adminAccess() {
+        return "Admin access granted";
+    }
+
+    @GetMapping("/user")
+    @JwtAuthenticated(roles = {Role.USER})
+    public String userAccess() {
+        return "User access granted";
+    }
+
+    @GetMapping("/moderator")
+    @JwtAuthenticated(roles = {Role.MODERATOR, Role.ADMIN})
+    public String moderatorAccess() {
+        return "Moderator or Admin access granted";
     }
 }
