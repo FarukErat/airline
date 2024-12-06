@@ -122,8 +122,8 @@
 					<referenceDriver>org.postgresql.Driver</referenceDriver>
 
 					<outputFile>src/main/resources/db/changelog/db.outputFile.xml</outputFile>
-					<outputChangeLogFile>src/main/resources/db/changelog/db.outputChangeLogFile.xml</outputChangeLogFile>
 					<changeLogFile>src/main/resources/db/changelog/db.changeLogFile.xml</changeLogFile>
+					<outputChangeLogFile>src/main/resources/db/changelog/db.outputChangeLogFile.xml</outputChangeLogFile>
 				</configuration>
 			</plugin>
 
