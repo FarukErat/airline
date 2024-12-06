@@ -8,16 +8,38 @@ Unexpected Catalog(s): NONE
 Changed Catalog(s): 
      airline
           name changed from 'airline' to 'liquibase'
-Missing Column(s): NONE
+Missing Column(s): 
+     public.aircraft.airline_id
+     public.airline.base_airport
+     public.airline.callsign
+     public.airline.founded_year
+     public.user_details.hashed_password
+     public.aircraft.id
+     public.airline.id
+     public.user_details.id
+     public.aircraft.manufacturer_serial_number
+     public.aircraft.model
+     public.airline.name
+     public.aircraft.number_of_engines
+     public.user_details.roles
+     public.aircraft.type
+     public.user_details.username
 Unexpected Column(s): NONE
 Changed Column(s): NONE
-Missing Foreign Key(s): NONE
+Missing Foreign Key(s): 
+     fkjlf3erek6x7moh3fya657mukb(aircraft[airline_id] -> airline[id])
 Unexpected Foreign Key(s): NONE
 Changed Foreign Key(s): NONE
-Missing Index(s): NONE
+Missing Index(s): 
+     aircraft_pkey UNIQUE  ON public.aircraft(id)
+     airline_pkey UNIQUE  ON public.airline(id)
+     user_details_pkey UNIQUE  ON public.user_details(id)
 Unexpected Index(s): NONE
 Changed Index(s): NONE
-Missing Primary Key(s): NONE
+Missing Primary Key(s): 
+     aircraft_pkey on public.aircraft(id)
+     airline_pkey on public.airline(id)
+     user_details_pkey on public.user_details(id)
 Unexpected Primary Key(s): NONE
 Changed Primary Key(s): NONE
 Missing Schema(s): NONE
@@ -26,7 +48,10 @@ Changed Schema(s): NONE
 Missing Sequence(s): NONE
 Unexpected Sequence(s): NONE
 Changed Sequence(s): NONE
-Missing Table(s): NONE
+Missing Table(s): 
+     aircraft
+     airline
+     user_details
 Unexpected Table(s): NONE
 Changed Table(s): NONE
 Missing Unique Constraint(s): NONE
