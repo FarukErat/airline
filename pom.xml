@@ -121,11 +121,9 @@
 					<referencePassword>mysecretpassword</referencePassword>
 					<referenceDriver>org.postgresql.Driver</referenceDriver>
 
-					<!-- ChangeLog file to write the changes -->
-					<changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
-
-					<!-- The output file for the diff changes -->
-					<outputFile>src/main/resources/db/changelog/db.changelog-diff.xml</outputFile>
+					<outputFile>src/main/resources/db/changelog/db.outputFile.xml</outputFile>
+					<outputChangeLogFile>src/main/resources/db/changelog/db.outputChangeLogFile.xml</outputChangeLogFile>
+					<changeLogFile>src/main/resources/db/changelog/db.changeLogFile.xml</changeLogFile>
 				</configuration>
 			</plugin>
 
