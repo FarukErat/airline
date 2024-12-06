@@ -88,6 +88,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>4.23.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -96,6 +103,32 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>4.29.2</version>
+				<configuration>
+					<!-- Target Database where migrations will be applied -->
+					<url>jdbc:postgresql://localhost:5432/liquibase</url>
+					<username>myusername</username>
+					<password>mysecretpassword</password>
+					<driver>org.postgresql.Driver</driver>
+
+					<!-- Reference Database to compare schema with JPA entities -->
+					<referenceUrl>jdbc:postgresql://localhost:5432/airline</referenceUrl>
+					<referenceUsername>myusername</referenceUsername>
+					<referencePassword>mysecretpassword</referencePassword>
+					<referenceDriver>org.postgresql.Driver</referenceDriver>
+
+					<!-- ChangeLog file to write the changes -->
+					<changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
+
+					<!-- The output file for the diff changes -->
+					<outputFile>src/main/resources/db/changelog/db.changelog-diff.xml</outputFile>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
