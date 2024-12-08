@@ -15,6 +15,15 @@ public class UserDetails {
     private String username;
     private String hashedPassword;
     private int roles;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public Long getId() {
         return id;
