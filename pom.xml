@@ -100,6 +100,14 @@
 			<artifactId>flyway-database-postgresql</artifactId>
 			<version>11.0.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>flightway</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/flightway-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
